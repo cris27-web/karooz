@@ -1,0 +1,8 @@
+[build]
+  command = "npm run build"      # Ensure this matches your build script
+  publish = "dist"              # Directory where your frontend build outputs
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -1,5 +1,5 @@
 import { firebaseApp } from '../firebaseConfig.js';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, getIdTokenResult } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js';
 import { getFirestore, doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js';
 
 const auth = getAuth(firebaseApp);
@@ -113,5 +113,15 @@ export class UserService {
             'stats.losses': losses,
             'stats.biggestWin': biggestWin
         });
+    }
+
+    async getIdTokenResult() {
+        if (!this.currentUser) return null;
+        return await this.currentUser.getIdTokenResult(true);
+    }
+
+    async isAdmin() {
+        const tokenResult = await this.getIdTokenResult();
+        return tokenResult?.claims?.admin === true;
     }
 }

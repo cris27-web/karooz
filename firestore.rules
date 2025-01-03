@@ -1,0 +1,33 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users Collection
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // ShopItems Collection
+    match /shopItems/{itemId} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+    }
+    
+    // Leaderboards Collection
+    match /leaderboards/{leaderboardId} {
+      allow read: if true;
+      allow write: if request.auth.token.admin == true;
+    }
+    
+    // GameSessions Collection
+    match /gameSessions/{sessionId} {
+      allow read: if request.auth != null;
+      allow write: if false; // Writes handled via server-side functions
+    }
+    
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

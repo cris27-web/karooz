@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,45 +6,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Karooz Casino</title>
     <link rel="stylesheet" href="styles/main.css">
-    
-    <!-- Firebase SDKs -->
-    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <script defer src="scripts/main.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script>
+        window.__FIREBASE_API_KEY__ = "{{FIREBASE_API_KEY}}";
+        window.__FIREBASE_AUTH_DOMAIN__ = "{{FIREBASE_AUTH_DOMAIN}}";
+        window.__FIREBASE_PROJECT_ID__ = "{{FIREBASE_PROJECT_ID}}";
+        window.__FIREBASE_STORAGE_BUCKET__ = "{{FIREBASE_STORAGE_BUCKET}}";
+        window.__FIREBASE_MESSAGING_SENDER_ID__ = "{{FIREBASE_MESSAGING_SENDER_ID}}";
+        window.__FIREBASE_APP_ID__ = "{{FIREBASE_APP_ID}}";
+    </script>
 </head>
 <body>
-    <!-- ...existing nav and login modal... -->
+    <!-- Navigation -->
+    <nav id="navigation">
+        <div class="nav-content">
+            <span id="userCoins">Coins: 0</span>
+            <span id="username">Not logged in</span>
+            <button id="loginBtn">Login</button>
+            <button id="shopBtn">Shop</button>
+        </div>
+    </nav>
 
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2>Login</h2>
+            <input type="text" id="usernameInput" placeholder="Username">
+            <input type="password" id="passwordInput" placeholder="Password">
+            <button id="submitLogin">Login</button>
+            <button id="registerBtn">Register</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
     <main class="game-grid">
-        <!-- ...existing daily bonus section... -->
-        
-        <!-- Additional Games -->
+        <!-- Daily Bonus Section -->
+        <div id="dailyBonus" class="game-section">
+            <h2>Daily Bonus</h2>
+            <button id="claimBonus">Claim Daily Bonus</button>
+        </div>
+
+        <!-- Crash Game Section -->
         <div id="crashGame" class="game-section crash-game">
-            <!-- ...existing crash game content... -->
+            <h2>Crash Game</h2>
+            <div class="crash-display">
+                <span id="crashMultiplier">1.00x</span>
+                <div class="crash-graph"></div>
+            </div>
+            <div class="crash-controls">
+                <input type="number" id="crashBetAmount" min="10" value="50">
+                <button id="crashBetBtn">Place Bet</button>
+                <button id="crashCashoutBtn">Cash Out</button>
+            </div>
         </div>
 
+        <!-- Slot Machine Section -->
         <div id="games" class="game-section">
-            <!-- ...existing slot machine content... -->
+            <h2>Games</h2>
+            <div id="slotMachine" class="game">
+                <h3>Slot Machine</h3>
+                <div class="slots">
+                    <div id="slot1">?</div>
+                    <div id="slot2">?</div>
+                    <div id="slot3">?</div>
+                </div>
+                <button id="spinBtn">Spin (50 coins)</button>
+            </div>
         </div>
 
+        <!-- Leaderboard Section -->
+        <div id="leaderboard" class="game-section">
+            <!-- Leaderboard will be dynamically loaded here -->
+        </div>
+
+        <!-- Player Statistics -->
         <div class="player-stats">
-            <!-- ...existing stats content... -->
+            <h3>Statistics</h3>
+            <p>Wins: <span id="totalWins">0</span></p>
+            <p>Losses: <span id="totalLosses">0</span></p>
+            <p>Biggest Win: <span id="biggestWin">0</span></p>
         </div>
     </main>
 
-    <!-- Firebase Initialization Script 
-    <script type="module">
-        // Initialize Firebase
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-        firebase.initializeApp(firebaseConfig);
-    </script> -->
+    <!-- Shop Modal -->
+    <div id="shopModal" class="modal">
+        <div class="modal-content">
+            <h2>Shop</h2>
+            <div class="shop-items">
+                <!-- Shop items will be dynamically loaded here -->
+            </div>
+            <button id="closeShop">Close</button>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" style="display: none;">
+        <h2>Admin Panel</h2>
+        <!-- Add admin functionalities here -->
+        <button id="addShopItem">Add Shop Item</button>
+        <button id="manageLeaderboards">Manage Leaderboards</button>
+    </div>
+
+    <script type="module" src="scripts/main.js"></script>
 </body>
 </html>

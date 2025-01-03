@@ -76,7 +76,7 @@ crashBetBtn.addEventListener('click', async () => {
     const betAmount = parseInt(document.getElementById('crashBetAmount').value);
     const user = userService.currentUser;
 
-    if (user && userService.getUserData().then(data => data.coins >= betAmount)) {
+    if (user && (await userService.getUserData()).coins >= betAmount) {
         await userService.updateCoins(-betAmount);
         updateUI();
 
@@ -110,6 +110,19 @@ shopBtn.addEventListener('click', () => {
 
 closeShopBtn.addEventListener('click', () => {
     shopModal.style.display = 'none';
+});
+
+// Event Listener for Adding Shop Item
+document.getElementById('addShopItem').addEventListener('click', () => {
+    const itemName = prompt('Enter item name:');
+    const itemPrice = parseInt(prompt('Enter item price in coins:'));
+    const itemDescription = prompt('Enter item description:');
+    
+    if (itemName && itemPrice && itemDescription) {
+        addShopItem(itemName, itemPrice, itemDescription);
+    } else {
+        alert('All fields are required.');
+    }
 });
 
 // Slot Machine Functionality
@@ -171,10 +184,20 @@ async function updateUI() {
         const userData = await userService.getUserData();
         userCoins.textContent = `Coins: ${userData.coins}`;
         loginBtn.style.display = 'none';
+        
+        // Check if user is admin
+        const admin = await userService.isAdmin();
+        if (admin) {
+            // Show admin-specific UI elements
+            showAdminPanel();
+        } else {
+            hideAdminPanel();
+        }
     } else {
         usernameSpan.textContent = 'Not logged in';
         userCoins.textContent = 'Coins: 0';
         loginBtn.style.display = 'block';
+        hideAdminPanel();
     }
 
     // Update Statistics
@@ -184,6 +207,16 @@ async function updateUI() {
         document.getElementById('totalLosses').textContent = stats.losses;
         document.getElementById('biggestWin').textContent = stats.biggestWin;
     }
+}
+
+function showAdminPanel() {
+    const adminPanel = document.getElementById('adminPanel');
+    if (adminPanel) adminPanel.style.display = 'block';
+}
+
+function hideAdminPanel() {
+    const adminPanel = document.getElementById('adminPanel');
+    if (adminPanel) adminPanel.style.display = 'none';
 }
 
 // Load Shop Items
@@ -224,6 +257,58 @@ window.purchaseItem = async function(id, price) {
     updateUI();
 }
 
+// Function to Add Shop Item
+async function addShopItem(name, price, description) {
+    try {
+        const response = await fetch('https://your-backend-url.com/admin/addShopItem', { // <-- Updated backend URL
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await auth.currentUser.getIdToken()}`
+            },
+            body: JSON.stringify({ name, price, description })
+        });
+        
+        if (response.ok) {
+            alert('Shop item added successfully!');
+            loadShopItems(); // Refresh shop items
+        } else {
+            const error = await response.text();
+            alert(`Error: ${error}`);
+        }
+    } catch (error) {
+        console.error('Error adding shop item:', error);
+        alert('Failed to add shop item.');
+    }
+}
+
+// Fetch and display the leaderboard
+async function loadLeaderboard() {
+    try {
+        const response = await fetch('/leaderboard/top');
+        if (response.ok) {
+            const leaderboard = await response.json();
+            displayLeaderboard(leaderboard);
+        } else {
+            console.error('Failed to fetch leaderboard');
+        }
+    } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+    }
+}
+
+function displayLeaderboard(leaderboard) {
+    const leaderboardContainer = document.getElementById('leaderboard');
+    leaderboardContainer.innerHTML = '<h2>Top Players</h2>';
+    const list = document.createElement('ol');
+    leaderboard.forEach(entry => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${entry.username}: ${entry.score} coins`;
+        list.appendChild(listItem);
+    });
+    leaderboardContainer.appendChild(list);
+}
+
 // Initialize App on Load
 window.onload = () => {
     auth.onAuthStateChanged(async (user) => {
@@ -235,6 +320,7 @@ window.onload = () => {
             updateUI();
         }
     });
+    loadLeaderboard();
 };
 
 // Game Service

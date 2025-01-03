@@ -1,4 +1,3 @@
-
 export class CrashGame {
     constructor(updateBalance) {
         this.multiplier = 1.00;
@@ -10,12 +9,12 @@ export class CrashGame {
 
     start(betAmount) {
         if (this.isRunning) return;
-        
+
         this.currentBet = betAmount;
         this.isRunning = true;
         this.multiplier = 1.00;
         this.crashPoint = this.generateCrashPoint();
-        
+
         return this.runGame();
     }
 
@@ -25,7 +24,7 @@ export class CrashGame {
 
     cashOut() {
         if (!this.isRunning) return 0;
-        
+
         const winnings = Math.floor(this.currentBet * this.multiplier);
         this.isRunning = false;
         this.updateBalance(winnings);

@@ -1,13 +1,13 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js';
 
-// Your Firebase configuration
+// Firebase configuration using window variables set in index.html
 const firebaseConfig = {
-    apiKey: "AIzaSyDsfqHCiukjDq4h7sQ7G3N9Kz6MYAH52tQ",
-    authDomain: "karooz-4b6f3.firebaseapp.com",
-    projectId: "karooz-4b6f3",
-    storageBucket: "karooz-4b6f3.firebasestorage.app",
-    messagingSenderId: "331691826103",
-    appId: "1:331691826103:web:86553b97e4517fe2112632"
+    apiKey: window.__FIREBASE_API_KEY__,
+    authDomain: window.__FIREBASE_AUTH_DOMAIN__,
+    projectId: window.__FIREBASE_PROJECT_ID__,
+    storageBucket: window.__FIREBASE_STORAGE_BUCKET__,
+    messagingSenderId: window.__FIREBASE_MESSAGING_SENDER_ID__,
+    appId: window.__FIREBASE_APP_ID__
 };
 
 // Initialize Firebase
